@@ -64,6 +64,169 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-1-binary" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/11/16/1-binary/" class="article-date">
+  <time datetime="2021-11-16T11:24:47.000Z" itemprop="datePublished">2021-11-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/11/16/1-binary/">1_binary</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#二进制运算</p>
+<p>##1.原码补码反码</p>
+<p><em><strong>对于正数而言，其原码反码补码是一样的</strong></em></p>
+<p><em><strong>对于负数而言，负数的反码，符号位不变，其余位取反</strong></em></p>
+<pre><code>                     ***负数的补码，为其反码加一也就是说，符号位不变，其余位取反后再加一***
+</code></pre>
+<p>补码解决了计算机中加减法的统一，计算机中数字是用补码储存的</p>
+<p>负数的补码为<strong>模减去该数的绝对值</strong>。</p>
+<p>如-5的补码为：-5=256-5=251=1111 1011(二进制)</p>
+<p>同样的，临界值-128也可以表示出来：-128=256-128=128=1000 0000(二进制)</p>
+<p>但是正128就会溢出了，故单字节(8位)表示的数字范围为-128–127。</p>
+<p> <em><strong>溢出舍弃</strong></em>|原数字|二进制</p>
+<p>-|-|-</p>
+<p> |16|00010000</p>
+<p>+|-5|11111011</p>
+<p>=|11|<em>1</em>00001011</p>
+<p>可见将<em>1</em>溢出位舍去，实现正负相加运算</p>
+<p>##2.常见位运算</p>
+<ul>
+<li>&amp; 与运算 两个位都是 1 时，结果才为 1，否则为 0，如<br>1 0 0 1 1<br>&amp;  1 1 0 0 1<br><code>------------------------------</code><br>  1 0 0 0 1 </li>
+</ul>
+<ul>
+<li>| 或运算 两个位都是 0 时，结果才为 0，否则为 1，如<br>1 0 0 1 1<br>|   1 1 0 0 1<br><code>------------------------------</code><br>  1 1 0 1 1 </li>
+</ul>
+<ul>
+<li>^ 异或运算，两个位相同则为 0，不同则为 1，<strong>a异或a=0，a^b^a=b</strong>如<br>1 0 0 1 1<br>^  1 1 0 0 1<br><code>-----------------------------</code><br>  0 1 0 1 0 </li>
+</ul>
+<ul>
+<li>~ 取反运算，0 则变为 1，1 则变为 0，如<br>~   1 0 0 1 1<br><code>-----------------------------</code><br>   0 1 1 0 0 </li>
+</ul>
+<ul>
+<li>&lt;&lt; 左移运算，向左进行移位操作，高位丢弃，低位补 0，如</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int a = 8;</span><br><span class="line">a &lt;&lt; 3;</span><br><span class="line">移位前：0000 0000 0000 0000 0000 0000 0000 1000</span><br><span class="line">移位后：0000 0000 0000 0000 0000 0000 0100 0000</span><br></pre></td></tr></table></figure>
+
+<p>&gt;&gt; 右移运算，向右进行移位操作，对无符号数，高位补 0，<strong>对于有符号数，高位补符号位</strong>，如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">unsigned int a = 8;</span><br><span class="line">a &gt;&gt; 3;</span><br><span class="line">移位前：0000 0000 0000 0000 0000 0000 0000 1000</span><br><span class="line">移位后：0000 0000 0000 0000 0000 0000 0000 0001</span><br><span class="line"></span><br><span class="line">int a = -8;</span><br><span class="line">a &gt;&gt; 3;</span><br><span class="line">移位前：1111 1111 1111 1111 1111 1111 1111 1000</span><br><span class="line">移位前：1111 1111 1111 1111 1111 1111 1111 1111</span><br></pre></td></tr></table></figure>
+
+<p>##3.进阶位运算</p>
+<h6 id="1-移位实现乘除法"><a href="#1-移位实现乘除法" class="headerlink" title="1.移位实现乘除法"></a>1.移位实现乘除法</h6><ul>
+<li>数 a 向右移一位，相当于将 a 除以 2<strong>这里注意，既然少了一位，所以向下取整</strong>；数 a 向左移一位，相当于将 a 乘以 2</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int a = 5;</span><br><span class="line">a &gt;&gt; 1; ---&gt; 2</span><br><span class="line">a &lt;&lt; 1; ---&gt; 10</span><br></pre></td></tr></table></figure>
+
+<h6 id="2-异或交换两数"><a href="#2-异或交换两数" class="headerlink" title="2. 异或交换两数"></a>2. 异或交换两数</h6><ul>
+<li>位操作交换两数可以不需要第三个临时变量，虽然普通操作也可以做到，但是没有其效率高</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//普通操作</span><br><span class="line">void swap(int &amp;a, int &amp;b) &#123;</span><br><span class="line">  a = a + b;</span><br><span class="line">  b = a - b;</span><br><span class="line">  a = a - b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//位与操作</span><br><span class="line">void swap(int &amp;a, int &amp;b) &#123;</span><br><span class="line">  a ^= b;</span><br><span class="line">  b ^= a;</span><br><span class="line">  a ^= b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>位与操作解释：第一步：a ^= b —&gt; a = (a^b); </p>
+<p>第二步：b ^= a —&gt; b = b^(a^b) —&gt; b = (b^b)^a = a</p>
+<p>第三步：a ^= b —&gt; a = (a^b)^a = (a^a)^b = b</p>
+<h6 id="3-与操作判断奇偶数"><a href="#3-与操作判断奇偶数" class="headerlink" title="3. 与操作判断奇偶数"></a>3. 与操作判断奇偶数</h6><ul>
+<li>只要根据数的最后一位是 0 还是 1 来决定即可，为 0 就是偶数，为 1 就是奇数<strong>这里有个有意思的事情，当初密码学老师讲的那个16进制的事，0x1ff是不是素数，因为结尾是f=15,必可被5整除，1*256+15*16+15*1=511</strong>。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if(0 == (a &amp; 1)) &#123;</span><br><span class="line"> //偶数</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="4-取反加一交换符号"><a href="#4-取反加一交换符号" class="headerlink" title="4. 取反加一交换符号"></a>4. 取反加一交换符号</h6><ul>
+<li>交换符号将正数变成负数，负数变成正数</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int reversal(int a) &#123;</span><br><span class="line">  return ~a + 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>整数取反加1，正好变成其对应的负数**(补码表示)**；负数取反加一，则变为其原码，即正数</p>
+<p>10=01010取反加一10110，负数得补码是除符号位取反再加一，减一10101，取反11010，-10</p>
+<h6 id="5-位操作求绝对值"><a href="#5-位操作求绝对值" class="headerlink" title="5. 位操作求绝对值"></a>5. 位操作求绝对值</h6><ul>
+<li>整数的绝对值是其本身，负数的绝对值正好可以对其进行取反加一求得，即我们首先判断其符号位（整数右移 31 位得到 0，负数右移 31 位得到 -1,即 0xffffffff），然后根据符号进行相应的操作</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int abs(int a) &#123;</span><br><span class="line">  int i = a &gt;&gt; 31;</span><br><span class="line">  return i == 0 ? a : (~a + 1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的操作可以进行优化，可以将 i == 0 的条件判断语句去掉。我们都知道符号位 i 只有两种情况，即 i = 0 为正，i = -1 为负。对于任何数与 0 异或都会保持不变，与 -1 即 0xffffffff 进行异或就相当于对此数进行取反,因此可以将上面三目元算符转换为((a^i)-i)，即整数时 a 与 0 异或得到本身，再减去 0，负数时与 0xffffffff 异或将 a 进行取反，然后在加上 1，即减去 i(i =-1)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int abs2(int a) &#123;</span><br><span class="line">  int i = a &gt;&gt; 31;</span><br><span class="line">  return ((a^i) - i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="6-位操作进行高低位交换"><a href="#6-位操作进行高低位交换" class="headerlink" title="6. 位操作进行高低位交换"></a>6. 位操作进行高低位交换</h6><ul>
+<li>给定一个 16 位的无符号整数，将其高 8 位与低 8 位进行交换，求出交换后的值，如：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">34520的二进制表示：</span><br><span class="line">10000110 11011000</span><br><span class="line"></span><br><span class="line">将其高8位与低8位进行交换，得到一个新的二进制数：</span><br><span class="line">11011000 10000110</span><br><span class="line">其十进制为55430</span><br></pre></td></tr></table></figure>
+
+<p>从上面移位操作我们可以知道，只要将无符号数 a&gt;&gt;8 即可得到其高 8 位移到低 8 位，高位补 0；将 a&lt;&lt;8 即可将 低 8 位移到高 8 位，低 8 位补 0，然后将 a&gt;&gt;8 和 a&lt;&lt;8 进行或操作既可求得交换后的结果。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">unsigned short a = 34520;</span><br><span class="line">a = (a &gt;&gt; 8) | (a &lt;&lt; 8);</span><br></pre></td></tr></table></figure>
+
+<h6 id="7-位操作进行二进制逆序"><a href="#7-位操作进行二进制逆序" class="headerlink" title="7. 位操作进行二进制逆序"></a>7. 位操作进行二进制逆序</h6><p>将无符号数的二进制表示进行<strong>逆序</strong>，求取逆序后的结果，如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">数34520的二进制表示：</span><br><span class="line">10000110 11011000</span><br><span class="line"></span><br><span class="line">逆序后则为：</span><br><span class="line">00011011 01100001</span><br><span class="line">它的十进制为7009</span><br></pre></td></tr></table></figure>
+
+<p>在字符串逆序过程中，可以从字符串的首尾开始，依次交换两端的数据。在二进制中使用位的高低位交换会更方便进行处理，这里我们分组进行多步处理。</p>
+<ul>
+<li>第一步:以每 2 位为一组，组内进行高低位交换</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">交换前： 10 00 01 10 11 01 10 00</span><br><span class="line">交换后： 01 00 10 01 11 10 01 00</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第二步：在上面的基础上，以每 4 位为 1 组，组内高低位进行交换</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">交换前： 0100 1001 1110 0100</span><br><span class="line">交换后： 0001 0110 1011 0001</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第三步：以每 8 位为一组，组内高低位进行交换</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">交换前： 00010110 10110001</span><br><span class="line">交换后： 01100001 00011011</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第四步：以每16位为一组，组内高低位进行交换</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">交换前： 0110000100011011</span><br><span class="line">交换后： 0001101101100001</span><br></pre></td></tr></table></figure>
+
+<p>对于上面的第一步，依次以 2 位作为一组，再进行组内高低位交换，这样处理起来比较繁琐，下面介绍另外一种方法进行处理。先分别取原数 10000110 11011000 的奇数位和偶数位，将空余位用 0 填充：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">原数：  10000110 11011000</span><br><span class="line">奇数位： 10000010 10001000</span><br><span class="line">偶数位： 00000100 01010000</span><br></pre></td></tr></table></figure>
+
+<p>再将奇数位右移一位，偶数位左移一位，此时将两个数据相或即可以达到<strong>奇偶位上数据交换</strong>的效果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">原数：  10000110 11011000</span><br><span class="line">奇数位右移一位： 0 10000010 1000100</span><br><span class="line">偶数位左移一位：0000100 01010000 0</span><br><span class="line">两数相或得到： 01001001 11100100</span><br></pre></td></tr></table></figure>
+
+<p>上面的方法用位操作可以表示为：</p>
+<ul>
+<li>取a的奇数位并用 0 进行填充可以表示为：a &amp; 0xAAAA</li>
+<li>取a的偶数为并用 0 进行填充可以表示为：a &amp; 0x5555 因此，上面的第一步可以表示为：<br>a = ((a &amp; 0xAAAA) &gt;&gt; 1) | ((a &amp; 0x5555) &lt;&lt; 1)<br>同理，可以得到其第二、三和四步为：<br>a = ((a &amp; 0xCCCC) &gt;&gt; 2) | ((a &amp; 0x3333) &lt;&lt; 2)<br>a = ((a &amp; 0xF0F0) &gt;&gt; 4) | ((a &amp; 0x0F0F) &lt;&lt; 4)<br>a = ((a &amp; 0xFF00) &gt;&gt; 8) | ((a &amp; 0x00FF) &lt;&lt; 8)<br>因此整个操作为：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">unsigned short a = 34520;</span><br><span class="line"></span><br><span class="line">a = ((a &amp; 0xAAAA) &gt;&gt; 1) | ((a &amp; 0x5555) &lt;&lt; 1);</span><br><span class="line">a = ((a &amp; 0xCCCC) &gt;&gt; 2) | ((a &amp; 0x3333) &lt;&lt; 2);</span><br><span class="line">a = ((a &amp; 0xF0F0) &gt;&gt; 4) | ((a &amp; 0x0F0F) &lt;&lt; 4);</span><br><span class="line">a = ((a &amp; 0xFF00) &gt;&gt; 8) | ((a &amp; 0x00FF) &lt;&lt; 8);</span><br></pre></td></tr></table></figure>
+
+<h6 id="8-a-amp-a-1-统计二进制中-1-的个数"><a href="#8-a-amp-a-1-统计二进制中-1-的个数" class="headerlink" title="8.  a &amp;= (a-1)统计二进制中 1 的个数"></a>8.  a &amp;= (a-1)统计二进制中 1 的个数</h6><p>统计二进制1的个数可以分别获取每个二进制位数，然后再统计其1的个数，此方法效率比较低。这里介绍另外一种高效的方法，同样以 34520 为例，我们计算其 a &amp;= (a-1)的结果：</p>
+<ul>
+<li>第一次：计算前：1000 0110 1101 1000 计算后：1000 0110 1101 0000</li>
+<li>第二次：计算前：1000 0110 1101 0000 计算后：1000 0110 1100 0000</li>
+<li>第二次：计算前：1000 0110 1100 0000 计算后：1000 0110 1000 0000 我们发现，<strong>每计算一次二进制中就少了一个 1</strong>，则我们可以通过下面方法去统计：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">count = 0  </span><br><span class="line">while(a)&#123;  </span><br><span class="line">  a = a &amp; (a - 1);  </span><br><span class="line">  count++;  </span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/11/16/1-binary/" data-id="ckw20gy9x0000xwu5868i66ny" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-binary_arithetic" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/11/16/binary_arithetic/" class="article-date">
@@ -217,7 +380,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/11/16/binary_arithetic/" data-id="ckw2042tk0000sku52antau7d" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/11/16/binary_arithetic/" data-id="ckw20gya50002xwu571ula22j" class="article-share-link">Share</a>
       
       
     </footer>
@@ -266,7 +429,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/11/16/hello-world/" data-id="ckw1h0od50000i8u509xg7glp" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/11/16/hello-world/" data-id="ckw20gya30001xwu5d2po8wbq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -305,6 +468,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/11/16/1-binary/">1_binary</a>
+          </li>
         
           <li>
             <a href="/2021/11/16/binary_arithetic/">binary arithmetic</a>
